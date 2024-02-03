@@ -142,7 +142,7 @@ class LevelRipper(QtWidgets.QWidget):
         self.ui.lineEdit_4.setText(file.description.decode())
 
     def setLog(self, text):
-        self.label_8.setText(text)
+        self.ui.label_8.setText(text)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

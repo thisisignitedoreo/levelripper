@@ -168,7 +168,7 @@ def parse_file(fp, isRaw):
 
     if isRaw:
         l.level = fp.read()
-        return l
+        return l, None
     
     err = l.parse(fp)
 
