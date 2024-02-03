@@ -9,7 +9,7 @@ to develop this software run `run.sh` as it needs to
 compile .ui file to start
 
 ## gallery
-![screenshot](ss.png)
+![screenshot](screenshot.png)
 
 ## license
 licensed under WTFPL, do whatever the fuck you want!
