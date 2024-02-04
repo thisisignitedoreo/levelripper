@@ -7,10 +7,10 @@
 from PySide6 import (
     QtWidgets,
     QtCore,
-    QtGui
 )
 from tkinter import messagebox
 from form import Ui_Form
+from online import *
 from gdsave import *
 import psutil
 import sys
@@ -45,6 +45,8 @@ class LevelRipper(QtWidgets.QWidget):
 
         self.file = None
         self.filePath = None
+
+        self.level = None
         
         self.ui.lineEdit_5.setText(gd_folder)
         self.setGdFolder()
@@ -65,6 +67,12 @@ class LevelRipper(QtWidgets.QWidget):
         self.ui.toolButton.clicked.connect(self.browseFile)
         self.ui.pushButton_3.clicked.connect(self.parseFile)
         self.ui.pushButton_4.clicked.connect(self.importLevel)
+
+        # online
+        self.ui.toolButton_3.clicked.connect(self.search)
+        self.ui.listWidget_2.itemClicked.connect(self.selectLevel)
+        self.ui.pushButton_6.clicked.connect(self.download)
+        self.ui.pushButton_7.clicked.connect(self.downloadRaw)
 
         # settings
         self.ui.lineEdit_5.textChanged.connect(self.setGdFolder)
@@ -130,6 +138,53 @@ class LevelRipper(QtWidgets.QWidget):
         import_level(self.file)    
         QtWidgets.QMessageBox.information(self, "Success", "Level file successfuly imported!")
         
+    def search(self):
+        search_list = 0
+        if self.ui.radioButton_4.isChecked(): search_list = 1
+        if self.ui.radioButton_3.isChecked(): search_list = 2
+        
+        search_type = 0
+        if self.ui.radioButton_7.isChecked(): search_type = 1
+        if self.ui.radioButton_6.isChecked(): search_type = 2
+
+        search_res = search(self.ui.lineEdit.text(), search_list, search_type, self.ui.spinBox.value() - 1)
+
+        self.ui.listWidget_2.clear()
+        for i in search_res:
+            item = QtWidgets.QListWidgetItem(i.name.decode())
+            item.setData(QtCore.Qt.UserRole, i)
+            self.ui.listWidget_2.addItem(item)
+    
+    def selectLevel(self, item):
+        self.level = item.data(QtCore.Qt.UserRole)
+
+        self.ui.lineEdit_2.setText(self.level.name.decode())
+        self.ui.lineEdit_8.setText(self.level.description.decode())
+    
+    def download(self):
+        if self.level is None:
+            QtWidgets.QMessageBox.warning(self, "No level is selected", "To download select the level first!")
+            return
+        
+        level = download_level(self.level.id)
+        
+        text, ok = QtWidgets.QFileDialog.getSaveFileName(self, "Save .ripped", "", "LevelRipper file (*.ripped)")
+        if ok and text:
+            open(text, "wb").write(level.serialize())
+            QtWidgets.QMessageBox.information(self, "Success", "Level file successfuly exported!")
+    
+    def downloadRaw(self):
+        if self.level is None:
+            QtWidgets.QMessageBox.warning(self, "No level is selected", "To download select the level first!")
+            return
+        
+        level = download_level(self.level.id)
+        
+        text, ok = QtWidgets.QFileDialog.getSaveFileName(self, "Save .txt", "", "Text file (*.txt)")
+        if ok and text:
+            open(text, "wb").write(level.level)
+            QtWidgets.QMessageBox.information(self, "Success", "Level file successfuly exported!")
+
     def parseFile(self):
         file, error = parse_file(open(self.filePath, "rb"), self.ui.radioButton.isChecked())
 

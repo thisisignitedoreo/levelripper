@@ -15,6 +15,7 @@ gd_folder = "GeometryDash"
 
 @dataclass
 class Level:
+    id: int | None
     name: bytes
     description: bytes
     level: bytes
@@ -161,7 +162,7 @@ def save_savefile():
     save = xor_cipher(save, 0xb)
 
 def parse_file(fp, isRaw):
-    l = Level(b"Imported Level", b"", b"",
+    l = Level(None, b"Imported Level", b"", b"",
               0, 0, 0, False,
               False, False, False, 0,
               0, 0)
@@ -213,7 +214,7 @@ def export_levels():
         if "k4" not in i: continue
 
         res.append(
-            Level(i["k2"].encode(),
+            Level(None, i["k2"].encode(),
                   base64.urlsafe_b64decode(i["k3"]) if "k3" in i.keys() else b"",
                   gzip.decompress(base64.urlsafe_b64decode(i["k4"])),
                   i["k42"] if "k42" in i.keys() else 0,
@@ -235,5 +236,4 @@ def export_levels():
 #     import_level(Level(b"new", b"wow", b"kS38,1_40_2_125_3_255_11_255_12_255_13_255_4_-1_6_1000_7_1_15_1_18_0_8_1|1_0_2_102_3_255_11_255_12_255_13_255_4_-1_6_1001_7_1_15_1_18_0_8_1|1_0_2_102_3_255_11_255_12_255_13_255_4_-1_6_1009_7_1_15_1_18_0_8_1|1_255_2_255_3_255_11_255_12_255_13_255_4_-1_6_1002_5_1_7_1_15_1_18_0_8_1|1_40_2_125_3_255_11_255_12_255_13_255_4_-1_6_1013_7_1_15_1_18_0_8_1|1_40_2_125_3_255_11_255_12_255_13_255_4_-1_6_1014_7_1_15_1_18_0_8_1|1_255_2_255_3_255_11_255_12_255_13_255_4_-1_6_1005_5_1_7_1_15_1_18_0_8_1|1_255_2_255_3_255_11_255_12_255_13_255_4_-1_6_1006_5_1_7_1_15_1_18_0_8_1|1_255_2_255_3_255_11_255_12_255_13_255_4_-1_6_1004_7_1_15_1_18_0_8_1|,kA13,0,kA15,0,kA16,0,kA14,,kA6,0,kA7,0,kA25,0,kA17,0,kA18,0,kS39,0,kA2,0,kA3,0,kA8,0,kA4,0,kA9,0,kA10,0,kA22,0,kA23,0,kA24,0,kA27,1,kA40,1,kA41,1,kA42,1,kA28,0,kA29,0,kA31,1,kA32,1,kA36,0,kA43,0,kA44,0,kA45,1,kA33,1,kA34,1,kA35,0,kA37,1,kA38,1,kA39,1,kA19,0,kA26,0,kA20,0,kA21,0,kA11,0;1,75,2,15,3,15,155,1;"))
 #     save_savefile()
 #     open(os.path.join(os.getenv("LocalAppData"), gd_folder, "CCLocalLevels.dat"), "wb").write(save)
-
 #     reload_save()
