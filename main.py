@@ -4,6 +4,7 @@
 #   "if you dont like sushi i dont like you"
 #   - aciddev
 
+from email import message
 from PySide6 import (
     QtWidgets,
     QtCore,
@@ -12,6 +13,7 @@ from tkinter import messagebox
 from form import Ui_Form
 from online import *
 from gdsave import *
+import traceback
 import psutil
 import sys
 import os
@@ -199,10 +201,16 @@ class LevelRipper(QtWidgets.QWidget):
     def setLog(self, text):
         self.ui.label_8.setText(text)
 
-if __name__ == "__main__":
+def main():
     app = QtWidgets.QApplication(sys.argv)
-
+    
     window = LevelRipper()
     window.show()
-
+    
     sys.exit(app.exec())
+
+if __name__ == "__main__":
+    try: main()
+    except Exception as err:
+        messagebox.showerror("Error occured", f"Error occured in application,\nplease report the bug into GitHub issues,\nattaching crash.log in program folder.\n\nDebug: {err}")
+        open("crash.log", "w").write(traceback.format_exc())
