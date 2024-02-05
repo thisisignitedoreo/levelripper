@@ -4,7 +4,6 @@
 #   "if you dont like sushi i dont like you"
 #   - aciddev
 
-from email import message
 from PySide6 import (
     QtWidgets,
     QtCore,
