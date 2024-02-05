@@ -52,6 +52,9 @@ class LevelRipper(QtWidgets.QWidget):
         self.ui.lineEdit_5.setText(gd_folder)
         self.setGdFolder()
 
+        self.ui.lineEdit_9.setText(base_url)
+        self.setGdSrvUrl()
+
         self.connect()
 
         self.updateLevels()
@@ -78,6 +81,7 @@ class LevelRipper(QtWidgets.QWidget):
         # settings
         self.ui.lineEdit_5.textChanged.connect(self.setGdFolder)
         self.ui.pushButton_5.clicked.connect(reload_save)
+        self.ui.lineEdit_9.textChanged.connect(self.setGdSrvUrl)
 
     def setGdFolder(self):
         global gd_folder
@@ -139,6 +143,10 @@ class LevelRipper(QtWidgets.QWidget):
         import_level(self.file)    
         QtWidgets.QMessageBox.information(self, "Success", "Level file successfuly imported!")
         
+    def setGdSrvUrl(self):
+        global base_url
+        base_url = self.ui.lineEdit_9.text()
+    
     def search(self):
         search_list = 0
         if self.ui.radioButton_4.isChecked(): search_list = 1
